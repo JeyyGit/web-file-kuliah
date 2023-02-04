@@ -31,7 +31,7 @@ def files(request: Request, path: str):
     files_paths = []
     for f in files:
         if os.path.isdir(f'../files{path}/{f}'):
-            files_paths.append([f, f"{path}/{f}", 'dir'])
+            files_paths.append([f, f"/files{path}/{f}", 'dir'])
         else:
             file_path = f"{'/download' + request.url.components.path[6:]}/{f}"
             files_paths.append([f, file_path, 'file'])
