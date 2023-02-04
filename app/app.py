@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -43,3 +43,7 @@ def files(request: Request, path: str):
 @app.get('/download{path:path}')
 def download(path: str):
     return FileResponse(f'../files{path}')
+
+@app.get('/redirect')
+def redirect():
+    return RedirectResponse('https://jeyy.xyz')
