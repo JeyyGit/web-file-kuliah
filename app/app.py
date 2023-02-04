@@ -10,6 +10,10 @@ app.mount('/public', StaticFiles(directory='../public'), 'public')
 
 templates = Jinja2Templates('../public')
 
+@app.get('/')
+def root():
+    return RedirectResponse('/files')
+
 @app.get("/files{path:path}")
 def files(request: Request, path: str):
     files = os.listdir(f"../files/{path}")
