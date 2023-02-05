@@ -18,17 +18,17 @@
   <title>File Kuliah</title>
 </head>
 
-<body class="bg-gradient-to-br from-sky-500 to-fuchsia-500">
+<body class="bg-gradient-to-br from-sky-500 to-fuchsia-500 font-mono">
   <div class="flex justify-center">
     <main class="grid grid-cols-1 w-full lg:w-3/5">
-      <div class="bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl m-10 p-6 bg-opacity-90 shadow-lg">
-        <div class="pb-2 border-b-4 border-gray-300 text-gray-600">
+      <div class="bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl m-10 p-6 bg-opacity-90 shadow-xl">
+        <div class="pb-2 border-b-4 border-gray-300 border-opacity-70 text-gray-600">
           <p class="text-3xl mb-3 text-white">Current directory:
-          <p class="text-xl text-white">/{% for dir_path in dir_paths %}<a href="/{{ dir_path[1] }}" class="underline underline-offset-2 text-blue-200 hover:text-blue-100 hover:underline-offset-4">{{ dir_path[0] }}</a>/{% endfor %}</p>
+          <p class="text-xl text-white">/{% for dir_path in dir_paths %}<a href="/{{ dir_path[1] }}" class="underline underline-offset-2 text-blue-200 rounded-sm transition hover:text-blue-100 hover:underline-offset-4">{{ dir_path[0] }}</a>/{% endfor %}</p>
         </div>
         <div class="mt-4">
           <ul class="grid grid-cols-1 divide-y">
-            <li class="rounded-lg group pl-2 pb-1 text-white hover:bg-slate-300 hover:bg-opacity-60 transition ease-out hover:scale-105 hover:shadow-md">
+            <li class="rounded-lg group pl-2 pb-1 text-white hover:bg-slate-300 hover:bg-opacity-60 hover:font-semibold transition ease-out hover:scale-105 hover:shadow-md">
               <a href="/{{ dir_paths[-2][1] if dir_paths|length > 1 else 'redirect' }}">
                 <div>
                   <svg class="w-5 inline-block stroke-1 group-hover:stroke-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -39,7 +39,7 @@
               </a>
             </li>
             {% for file in files %}
-            <li class="rounded-lg group pl-2 pb-1 text-white hover:bg-slate-300 hover:bg-opacity-60 transition ease-out hover:scale-105 hover:shadow-md">
+            <li class="rounded-lg group pl-2 pb-1 text-white hover:bg-slate-300 hover:bg-opacity-60 hover:font-semibold transition ease-out hover:scale-105 hover:shadow-md">
               {% if file[2] == 'dir' %}
               <a href="{{ file[1] }}" class="break-all">
                 <div>
@@ -64,6 +64,8 @@
           </ul>
         </div>
       </div>
+      
+      <!-- socials -->
       <div class="flex justify-center mb-20">
         <a href="https://github.com/JeyyGit" target="_blank">
           <svg class="w-8 transition ease-out hover:scale-125 hover:rotate-12 fill-white" viewBox="0 0 16 16">
