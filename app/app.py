@@ -19,7 +19,7 @@ def root():
 def favicon():
     return FileResponse('../public/favicon.ico')
 
-@app.get('robots.txt')
+@app.get('/robots.txt')
 def robots():
     return FileResponse('../public/robots.txt')
 
