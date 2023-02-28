@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.exceptions import HTTPException
 from decouple import config
 
 import os
@@ -25,7 +26,10 @@ def robots():
 
 @app.get("/files{path:path}")
 def files(request: Request, path: str):
-    files = os.listdir(f"../files/{path}")
+    try:
+        files = os.listdir(f"../files/{path}")
+    except:
+        raise HTTPException(404, "Directory Not Found")
 
     dirs = []
     fs = []
@@ -55,6 +59,11 @@ def files(request: Request, path: str):
 
 @app.get('/download{path:path}')
 def download(path: str):
+    try:
+        os.listdir(f"../files{path}")
+    except:
+        raise HTTPException(404, "Directory Not Found")
+    
     return FileResponse(f'../files{path}')
 
 @app.get('/redirect')
