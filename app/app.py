@@ -7,10 +7,23 @@ from decouple import config
 
 import os
 
+
+class CustomException(Exception):
+    def __init__(self, code, details) -> None:
+        self.code = code
+        self.details = details
+
+
 app = FastAPI()
 app.mount('/public', StaticFiles(directory='../public'), 'public')
 
 templates = Jinja2Templates('../public')
+
+
+@app.exception_handler(CustomException)
+async def custom_exception_handler(request: Request, exc: CustomException):
+    return templates.TemplateResponse('error.html', {'request': request, 'exc': exc}, exc.code)
+
 
 @app.get('/')
 def root():
@@ -26,10 +39,10 @@ def robots():
 
 @app.get("/files{path:path}")
 def files(request: Request, path: str):
-    try:
-        files = os.listdir(f"../files/{path}")
-    except:
-        raise HTTPException(404, "Directory Not Found")
+    if not os.path.isdir(f"../files/{path}"):
+        raise CustomException(404, "Directory Not Found")
+
+    files = os.listdir(f"../files/{path}")
 
     dirs = []
     fs = []
@@ -59,11 +72,9 @@ def files(request: Request, path: str):
 
 @app.get('/download{path:path}')
 def download(path: str):
-    try:
-        os.listdir(f"../files{path}")
-    except:
-        raise HTTPException(404, "Directory Not Found")
-    
+    if not os.path.isfile(f'../files{path}'):
+        raise CustomException(404, "File Not Found")
+
     return FileResponse(f'../files{path}')
 
 @app.get('/redirect')
