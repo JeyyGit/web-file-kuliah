@@ -44,7 +44,7 @@ def get_dirs(url_component_path, url_path, path):
             files_paths.append([f, f"/files{path}/{f}", 'dir'])
         else:
             if f.endswith('.docx') or f.endswith('.xlsx'):
-                file_path = f"{'/display' + url_component_path[6:]}/{f}"
+                file_path = f"{'/viewer' + url_component_path[6:]}/{f}"
             else:
                 file_path = f"{'/download' + url_component_path[6:]}/{f}"
             files_paths.append([f, file_path, 'file'])
@@ -58,7 +58,7 @@ def get_dirs(url_component_path, url_path, path):
     return files_paths, dir_paths
 
 @cache
-def get_display(path, document_type):
+def get_view(path, document_type):
     res = f"""
             <head>
                 <meta charset="UTF-8">
@@ -159,8 +159,8 @@ def download(path: str):
     return FileResponse(f'../files{path}')
 
 
-@app.get('/display{path:path}')
-def display(path: str):
+@app.get('/viewer{path:path}')
+def viewer(path: str):
     if not os.path.isfile(f'../files{path}'):
         raise CustomException(404, "File Not Found")
 
@@ -170,7 +170,7 @@ def display(path: str):
         document_type = 'Excel'
 
     try:
-        buf = get_display(path, document_type)
+        buf = get_view(path, document_type)
         buf.seek(0)
     except:
         return FileResponse(f'../files{path}')
