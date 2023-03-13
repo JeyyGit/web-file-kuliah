@@ -1,5 +1,4 @@
 import os
-import urllib
 from functools import cache
 
 import mammoth
@@ -101,7 +100,7 @@ def viewer(request: Request, path: str):
         except:
             return FileResponse(f'../files{path}')
 
-    office_live_url = f"https://view.officeapps.live.com/op/view.aspx?src={urllib.parse.quote('https://ac.jeyy.xyz/download' + request.url.components.path[7:])}"
+    office_live_url = f"https://view.officeapps.live.com/op/view.aspx?src=https://ac.jeyy.xyz/download{request.url.components.path[7:]}"
     return RedirectResponse(office_live_url)
 
 @app.get('/redirect')
