@@ -1,11 +1,11 @@
+import os
+from functools import cache
+
+from decouple import config
 from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.exceptions import HTTPException
-from decouple import config
-
-import os
 
 
 class CustomException(Exception):
@@ -18,6 +18,38 @@ app = FastAPI()
 app.mount('/public', StaticFiles(directory='../public'), 'public')
 
 templates = Jinja2Templates('../public')
+links = [config('LINK1'), config('LINK2'), config('LINK3'), config('LINK4')]
+
+
+@cache
+def get_dirs(url_component_path, url_path, path):
+    files = os.listdir(f"../files/{path}")
+
+    dirs = []
+    fs = []
+    for f in files:
+        if os.path.isdir(f'../files{path}/{f}'):
+            dirs.append(f)
+        else:
+            fs.append(f)
+
+    files = [*sorted(dirs), *sorted(fs)]
+
+    files_paths = []
+    for f in files:
+        if os.path.isdir(f'../files{path}/{f}'):
+            files_paths.append([f, f"/files{path}/{f}", 'dir'])
+        else:
+            file_path = f"{'/download' + url_component_path[6:]}/{f}"
+            files_paths.append([f, file_path, 'file'])
+
+    dirs = url_path.split('/')
+    dir_paths = []
+    for i, dir_path in enumerate(dirs):
+        full_url_path = '/'.join(dirs[j] for j in range(1, i+1))
+        dir_paths.append([dir_path, full_url_path])
+
+    return files_paths, dir_paths
 
 
 @app.exception_handler(CustomException)
@@ -42,33 +74,9 @@ def files(request: Request, path: str):
     if not os.path.isdir(f"../files/{path}"):
         raise CustomException(404, "Directory Not Found")
 
-    files = os.listdir(f"../files/{path}")
+    files_paths, dir_paths = get_dirs(request.url.components.path, request.url.path, path)
 
-    dirs = []
-    fs = []
-    for f in files:
-        if os.path.isdir(f'../files{path}/{f}'):
-            dirs.append(f)
-        else:
-            fs.append(f)
-
-    files = [*sorted(dirs), *sorted(fs)]
-
-    files_paths = []
-    for f in files:
-        if os.path.isdir(f'../files{path}/{f}'):
-            files_paths.append([f, f"/files{path}/{f}", 'dir'])
-        else:
-            file_path = f"{'/download' + request.url.components.path[6:]}/{f}"
-            files_paths.append([f, file_path, 'file'])
-
-    dirs = request.url.path.split('/')
-    dir_paths = []
-    for i, dir_path in enumerate(dirs):
-        full_url_path = '/'.join(dirs[j] for j in range(1, i+1))
-        dir_paths.append([dir_path, full_url_path])
-
-    return templates.TemplateResponse("index.html", {"request": request, "files": files_paths, 'dir_paths': dir_paths[1:], 'links': [config('LINK1'), config('LINK2'), config('LINK3'), config('LINK4'), ]})
+    return templates.TemplateResponse("index.html", {"request": request, "files": files_paths, 'dir_paths': dir_paths[1:], 'links': links})
 
 @app.get('/download{path:path}')
 def download(path: str):
