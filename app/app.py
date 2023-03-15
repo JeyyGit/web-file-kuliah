@@ -104,7 +104,7 @@ def viewer(request: Request, path: str):
         'embed_url': embed_url, 
         'file_name': file_name, 
         'download_url': download_url,
-        'prev_dir': prev_dir[-1]
+        'prev_dir': prev_dir[:-1]
     })
 
 @app.get('/redirect')
