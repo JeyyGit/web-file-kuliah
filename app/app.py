@@ -7,6 +7,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from urllib import parse
 
 
 class CustomException(Exception):
@@ -39,12 +40,12 @@ def get_dirs(url_component_path, url_path, path):
     files_paths = []
     for f in files:
         if os.path.isdir(f'../files{path}/{f}'):
-            files_paths.append([f, f"/files{path}/{f}", 'dir'])
+            files_paths.append([f, parse.quote(f"/files{path}/{f}"), 'dir'])
         else:
             if f.endswith('.docx') or f.endswith('.xlsx') or f.endswith('.pptx'):
-                file_path = f"{'/viewer' + url_component_path[6:]}/{f}"
+                file_path = parse.quote(f"{'/viewer' + url_component_path[6:]}/{f}")
             else:
-                file_path = f"{'/download' + url_component_path[6:]}/{f}"
+                file_path = parse.quote(f"{'/download' + url_component_path[6:]}/{f}")
             files_paths.append([f, file_path, 'file'])
 
     dirs = url_path.split('/')
