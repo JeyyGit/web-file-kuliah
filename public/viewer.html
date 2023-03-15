@@ -1,0 +1,35 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" href="https://cdn.jeyy.xyz/image/ac_141f52.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="File Kuliah | Jeyy">
+    <meta name="theme-color" content="#c8d5e1">
+    <meta content="https://cdn.jeyy.xyz/image/ac_141f52.png" property="og:image">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@ac.jeyy.xyz">
+    <meta name="twitter:title" content="File Kuliah">
+    <meta name="twitter:description" content="File Kuliah">
+    <link id="favicon" rel="icon" type="image/x-icon" href="/favicon.ico">
+    <meta name="twitter:image" content="https://cdn.jeyy.xyz/image/ac_141f52.png">
+    <link rel="stylesheet" href="/public/styles.css">
+    <title>{{ file_name }}</title>
+</head>
+<body>
+    <div class="bg-gradient-to-r from-sky-500 to-fuchsia-500 w-full flex flex-row justify-between items-center text-white font-mono" style="height: 10vh;">
+        <a href="{{ prev_dir }}" class="mx-2 md:mx-5 text-sm lg:text-xl font-bold hover:underline hover:underline-offset-auto max-h-fit" title="Open file location">Jeyy Document Viewer</a>
+        <p class="py-1 px-1 text-xs sm:text-base text-ellipsis">{{ file_name }}</p>
+        <a href="{{ download_url }}">
+            <div class="py-1 px-2 m-2 sm:py-2 sm:px-3 sm:m-5 tracking-wide border border-sky-200 rounded-lg text-white transition hover:bg-gradient-to-br from-rose-200 to-sky-300 hover:text-slate-900 hover:shadow-md">
+                Download
+            </div>
+        </a>
+    </div>
+    <iframe 
+        src="{{ embed_url }}" 
+        style="position:fixed; top:10vh; left:0; bottom:0; right:0; width:100%; height:90vh; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;">
+    </iframe>
+</body>
+</html>

@@ -1,13 +1,12 @@
 import os
 from functools import cache
+from urllib import parse
 
-import mammoth
 from decouple import config
 from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from urllib import parse
 
 
 class CustomException(Exception):
@@ -94,15 +93,19 @@ def download(path: str):
 def viewer(request: Request, path: str):
     if not os.path.isfile(f'../files{path}'):
         raise CustomException(404, "File Not Found")
-    
-    if path.endswith('.docx'):
-        try:
-            mammoth.convert_to_html(f'../files{path}')
-        except:
-            return FileResponse(f'../files{path}')
 
-    office_live_url = f"https://view.officeapps.live.com/op/view.aspx?src={parse.quote('https://ac.jeyy.xyz/download' + request.url.components.path[7:], safe='')}"
-    return RedirectResponse(office_live_url)
+    download_url = 'https://ac.jeyy.xyz/download' + request.url.components.path[7:]
+    embed_url = f"https://view.officeapps.live.com/op/embed.aspx?src={parse.quote(download_url, safe='')}&amp;wdEmbedCode=0"
+    file_name = request.url.components.path.split('/')[-1]
+    prev_dir = ('https://ac.jeyy.xyz/files' + request.url.components.path[7:]).replace(file_name, '')
+
+    return templates.TemplateResponse('viewer.html', {
+        'request': request, 
+        'embed_url': embed_url, 
+        'file_name': file_name, 
+        'download_url': download_url,
+        'prev_dir': prev_dir
+    })
 
 @app.get('/redirect')
 def redirect():
