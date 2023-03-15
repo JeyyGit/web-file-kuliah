@@ -19,10 +19,10 @@
 </head>
 <body>
     <div class="bg-gradient-to-r from-sky-500 to-fuchsia-500 w-full flex flex-row justify-between items-center text-white font-mono" style="height: 10vh;">
-        <a href="{{ prev_dir }}" class="mx-2 md:mx-5 text-sm lg:text-xl font-bold hover:underline hover:underline-offset-auto max-h-fit" title="Open file location">Document Viewer</a>
-        <p class="py-1 px-1 text-xs sm:text-base text-ellipsis">{{ file_name }}</p>
+        <h1 class="mx-2 md:mx-5 text-sm sm:text-lg md:text-xl font-bold max-h-fit" >Document Viewer</h1>
+        <a href="{{ prev_dir }}" class="py-1 px-1 text-xs sm:text-base hover:underline hover:underline-offset-auto text-ellipsis" title="Open file location">{{ file_name }}</p>
         <a href="{{ download_url }}">
-            <div class="py-1 px-2 m-2 sm:py-2 sm:px-3 sm:m-5 tracking-wide border border-sky-200 rounded-lg text-white transition hover:bg-gradient-to-br from-rose-200 to-sky-300 hover:text-slate-900 hover:shadow-md">
+            <div class="py-2 px-3 m-2 sm:py-2 sm:px-3 sm:m-5 tracking-wide border border-sky-200 rounded-lg text-white transition hover:bg-gradient-to-br from-rose-200 to-sky-300 hover:text-slate-900 hover:shadow-md">
                 Download
             </div>
         </a>
