@@ -40,12 +40,12 @@ def get_dirs(url_component_path, url_path, path):
     files_paths = []
     for f in files:
         if os.path.isdir(f'../files{path}/{f}'):
-            files_paths.append([f, parse.quote(f"/files{path}/{f}"), 'dir'])
+            files_paths.append([f, f"/files{path}/{f}", 'dir'])
         else:
             if f.endswith('.docx') or f.endswith('.xlsx') or f.endswith('.pptx'):
-                file_path = parse.quote(f"{'/viewer' + url_component_path[6:]}/{f}")
+                file_path = f"{'/viewer' + url_component_path[6:]}/{f}"
             else:
-                file_path = parse.quote(f"{'/download' + url_component_path[6:]}/{f}")
+                file_path = f"{'/download' + url_component_path[6:]}/{f}"
             files_paths.append([f, file_path, 'file'])
 
     dirs = url_path.split('/')
@@ -101,7 +101,7 @@ def viewer(request: Request, path: str):
         except:
             return FileResponse(f'../files{path}')
 
-    office_live_url = f"https://view.officeapps.live.com/op/view.aspx?src=https://ac.jeyy.xyz/download{request.url.components.path[7:]}"
+    office_live_url = f"https://view.officeapps.live.com/op/view.aspx?src={parse.quote('https://ac.jeyy.xyz/download' + request.url.components.path[7:])}"
     return RedirectResponse(office_live_url)
 
 @app.get('/redirect')
