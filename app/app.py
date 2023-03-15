@@ -98,14 +98,13 @@ def viewer(request: Request, path: str):
     embed_url = f"https://view.officeapps.live.com/op/embed.aspx?src={parse.quote(download_url, safe='')}&amp;wdEmbedCode=0"
     file_name = request.url.components.path.split('/')[-1]
     prev_dir = ('https://ac.jeyy.xyz/files' + request.url.components.path[7:]).replace(file_name, '')
-    print(prev_dir[-1])
 
     return templates.TemplateResponse('viewer.html', {
         'request': request, 
         'embed_url': embed_url, 
         'file_name': file_name, 
         'download_url': download_url,
-        'prev_dir': prev_dir
+        'prev_dir': prev_dir[-1]
     })
 
 @app.get('/redirect')
