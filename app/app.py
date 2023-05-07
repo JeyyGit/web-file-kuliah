@@ -41,7 +41,7 @@ def get_dirs(url_component_path, url_path, path):
         if os.path.isdir(f'../files{path}/{f}'):
             files_paths.append([f, f"/files{path}/{f}", 'dir'])
         else:
-            if f.endswith('.docx') or f.endswith('.xlsx') or f.endswith('.pptx'):
+            if f.endswith('.docx') or f.endswith('.xlsx') or f.endswith('.pptx') or f.endswith('.pdf'):
                 file_path = f"{'/viewer' + url_component_path[6:]}/{f}"
             else:
                 file_path = f"{'/download' + url_component_path[6:]}/{f}"
@@ -95,7 +95,11 @@ def viewer(request: Request, path: str):
         raise CustomException(404, "File Not Found")
 
     download_url = 'https://ac.jeyy.xyz/download' + request.url.components.path[7:]
-    embed_url = f"https://view.officeapps.live.com/op/embed.aspx?src={parse.quote(download_url, safe='')}&amp;wdEmbedCode=0"
+    if path.endswith('.pdf'):
+        embed_url = download_url
+    else:
+        embed_url = f"https://view.officeapps.live.com/op/embed.aspx?src={parse.quote(download_url, safe='')}&amp;wdEmbedCode=0"
+    
     file_name = request.url.components.path.split('/')[-1]
     prev_dir = ('https://ac.jeyy.xyz/files' + request.url.components.path[7:]).replace(file_name, '')
 
