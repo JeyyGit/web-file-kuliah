@@ -65,22 +65,27 @@ async def custom_exception_handler(request: Request, exc: CustomException):
 def root():
     return RedirectResponse('/files')
 
+
 @app.get('/favicon.ico')
 def favicon():
     return FileResponse('../public/favicon.ico')
 
+
 @app.get('/robots.txt')
 def robots():
     return FileResponse('../public/robots.txt')
+
 
 @app.get("/files{path:path}")
 def files(request: Request, path: str):
     if not os.path.isdir(f"../files/{path}"):
         raise CustomException(404, "Directory Not Found")
 
-    files_paths, dir_paths = get_dirs(request.url.components.path, request.url.path, path)
+    files_paths, dir_paths = get_dirs(
+        request.url.components.path, request.url.path, path)
 
     return templates.TemplateResponse("index.html", {"request": request, "files": files_paths, 'dir_paths': dir_paths[1:], 'links': links})
+
 
 @app.get('/download{path:path}')
 def download(path: str):
@@ -89,27 +94,31 @@ def download(path: str):
 
     return FileResponse(f'../files{path}')
 
+
 @app.get('/viewer{path:path}')
 def viewer(request: Request, path: str):
     if not os.path.isfile(f'../files{path}'):
         raise CustomException(404, "File Not Found")
 
-    download_url = 'https://ac.jeyy.xyz/download' + request.url.components.path[7:]
+    download_url = 'https://ac.jeyy.xyz/download' + \
+        request.url.components.path[7:]
     if path.endswith('.pdf'):
         embed_url = download_url
     else:
         embed_url = f"https://view.officeapps.live.com/op/embed.aspx?src={parse.quote(download_url, safe='')}&amp;wdEmbedCode=0"
-    
+
     file_name = request.url.components.path.split('/')[-1]
-    prev_dir = ('https://ac.jeyy.xyz/files' + request.url.components.path[7:]).replace(file_name, '')
+    prev_dir = ('https://ac.jeyy.xyz/files' +
+                request.url.components.path[7:]).replace(file_name, '')
 
     return templates.TemplateResponse('viewer.html', {
-        'request': request, 
-        'embed_url': embed_url, 
-        'file_name': file_name, 
+        'request': request,
+        'embed_url': embed_url,
+        'file_name': file_name,
         'download_url': download_url,
         'prev_dir': prev_dir[:-1]
     })
+
 
 @app.get('/redirect')
 def redirect():
