@@ -64,7 +64,7 @@ def get_dirs(url_component_path, url_path, path):
 @app.exception_handler(CustomException)
 async def custom_exception_handler(request: Request, exc: CustomException):
     return templates.TemplateResponse(
-        "error.html", {"request": request, "exc": exc}, exc.code
+        "error.html", {"request": request, "exc": exc, "BASE_URL": config('BASE_URL')}, exc.code
     )
 
 
@@ -99,6 +99,7 @@ def files(request: Request, path: str):
             "files": files_paths,
             "dir_paths": dir_paths[1:],
             "links": links,
+            "BASE_URL": config('BASE_URL')
         },
     )
 
@@ -116,14 +117,14 @@ def viewer(request: Request, path: str):
     if not os.path.isfile(f"../files{path}"):
         raise CustomException(404, "File Not Found")
 
-    download_url = "https://ac.jeyy.xyz/download" + request.url.components.path[7:]
+    download_url = f"https://{config('BASE_URL')}/download" + request.url.components.path[7:]
     if path.endswith(".pdf"):
         embed_url = download_url
     else:
         embed_url = f"https://view.officeapps.live.com/op/embed.aspx?src={parse.quote(download_url, safe='')}&amp;wdEmbedCode=0"
 
     file_name = request.url.components.path.split("/")[-1]
-    prev_dir = ("https://ac.jeyy.xyz/files" + request.url.components.path[7:]).replace(
+    prev_dir = (f"https://{config('BASE_URL')}/files" + request.url.components.path[7:]).replace(
         file_name, ""
     )
 
@@ -135,6 +136,7 @@ def viewer(request: Request, path: str):
             "file_name": file_name,
             "download_url": download_url,
             "prev_dir": prev_dir[:-1],
+            "BASE_URL": config('BASE_URL')
         },
     )
 
