@@ -143,4 +143,4 @@ def viewer(request: Request, path: str):
 
 @app.get("/redirect")
 def redirect():
-    return RedirectResponse("https://jeyy.xyz")
+    return RedirectResponse(f"https://{config('REDIRECT_URL')}")
