@@ -45,6 +45,7 @@ def get_dirs(url_component_path, url_path, path):
                 f.endswith(".docx")
                 or f.endswith(".xlsx")
                 or f.endswith(".pptx")
+                or f.endswith(".ppt")
                 or f.endswith(".pdf")
             ):
                 file_path = f"{'/viewer' + url_component_path[6:]}/{f}"
