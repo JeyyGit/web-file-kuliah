@@ -172,7 +172,7 @@ def viewer(request: Request, path: str):
         f"https://{config('BASE_URL')}/download" + request.url.components.path[7:]
     )
     if path.endswith(".pdf"):
-        embed_url = download_url
+        embed_url = f"https://{config('BASE_URL')}/pdf{path}"
     elif path.endswith(".ipynb"):
         embed_url = f"https://nbviewer.org/urls{download_url[7:]}"
     elif any(path.endswith(ext) for ext in OFFICE_EXT):
@@ -212,6 +212,25 @@ def code(request: Request, path: str):
 
     return templates.TemplateResponse(
         "code.html", {"request": request, "content": content, "extension": extension}
+    )
+
+
+@app.get("/pdf{path:path}")
+def pdf(request: Request, path: str):
+    if not os.path.isfile(f"../files{path}"):
+        raise CustomException(404, "File Not Found")
+
+    pdf_url = f"https://{config('BASE_URL')}/download{path}"
+    file_name = path.split("/")[-1]
+    return templates.TemplateResponse(
+        "pdf.html",
+        {
+            "request": request,
+            "BASE_URL": config("BASE_URL"),
+            "pdf_url": pdf_url,
+            "file_name": file_name,
+            "client_id": config("ADOBE_CLIENTID"),
+        },
     )
 
 
