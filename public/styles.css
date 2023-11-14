@@ -547,12 +547,32 @@ video {
   }
 }
 
+.static {
+  position: static;
+}
+
+.fixed {
+  position: fixed;
+}
+
+.relative {
+  position: relative;
+}
+
 .m-10 {
   margin: 2.5rem;
 }
 
 .m-2 {
   margin: 0.5rem;
+}
+
+.m-0 {
+  margin: 0px;
+}
+
+.\!m-0 {
+  margin: 0px !important;
 }
 
 .my-2 {
@@ -586,16 +606,32 @@ video {
   margin-left: 0.75rem;
 }
 
+.block {
+  display: block;
+}
+
 .inline-block {
   display: inline-block;
+}
+
+.inline {
+  display: inline;
 }
 
 .flex {
   display: flex;
 }
 
+.table {
+  display: table;
+}
+
 .grid {
   display: grid;
+}
+
+.hidden {
+  display: none;
 }
 
 .h-full {
@@ -604,6 +640,14 @@ video {
 
 .h-6 {
   height: 1.5rem;
+}
+
+.h-screen {
+  height: 100vh;
+}
+
+.\!h-screen {
+  height: 100vh !important;
 }
 
 .max-h-fit {
@@ -625,6 +669,18 @@ video {
 
 .w-8 {
   width: 2rem;
+}
+
+.w-screen {
+  width: 100vw;
+}
+
+.\!w-screen {
+  width: 100vw !important;
+}
+
+.resize {
+  resize: both;
 }
 
 .grid-cols-1 {
@@ -653,6 +709,12 @@ video {
   border-bottom-width: calc(1px * var(--tw-divide-y-reverse));
 }
 
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .text-ellipsis {
   text-overflow: ellipsis;
 }
@@ -673,8 +735,24 @@ video {
   border-radius: 0.125rem;
 }
 
+.rounded {
+  border-radius: 0.25rem;
+}
+
+.rounded-none {
+  border-radius: 0px;
+}
+
+.\!rounded-none {
+  border-radius: 0px !important;
+}
+
 .border {
   border-width: 1px;
+}
+
+.\!border {
+  border-width: 1px !important;
 }
 
 .border-b-4 {
@@ -693,6 +771,11 @@ video {
 
 .border-opacity-70 {
   --tw-border-opacity: 0.7;
+}
+
+.bg-cyan-900 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(22 78 99 / var(--tw-bg-opacity));
 }
 
 .bg-opacity-90 {
@@ -762,6 +845,10 @@ video {
   padding: 1.5rem;
 }
 
+.p-0 {
+  padding: 0px;
+}
+
 .py-2 {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -792,6 +879,22 @@ video {
 
 .pb-1 {
   padding-bottom: 0.25rem;
+}
+
+.pt-5 {
+  padding-top: 1.25rem;
+}
+
+.\!pt-5 {
+  padding-top: 1.25rem !important;
+}
+
+.\!pt-1 {
+  padding-top: 0.25rem !important;
+}
+
+.\!pt-10 {
+  padding-top: 2.5rem !important;
 }
 
 .text-center {
@@ -838,6 +941,14 @@ video {
 
 .font-extrabold {
   font-weight: 800;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+.italic {
+  font-style: italic;
 }
 
 .tracking-wide {
@@ -888,6 +999,10 @@ video {
 
 .drop-shadow-xl {
   --tw-drop-shadow: drop-shadow(0 20px 13px rgb(0 0 0 / 0.03)) drop-shadow(0 8px 5px rgb(0 0 0 / 0.08));
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+.filter {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 

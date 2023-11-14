@@ -21,6 +21,60 @@ app.mount("/public", StaticFiles(directory="../public"), "public")
 templates = Jinja2Templates("../public")
 links = [config("LINK1"), config("LINK2"), config("LINK3"), config("LINK4")]
 
+OFFICE_EXT = [".doc", ".docx", ".ppt", ".pptx"]
+TEXT_EXT = [
+    ".txt",
+    ".text",
+    ".md",
+    ".css",
+    ".js",
+    ".ino",
+    ".pde",
+    ".sh",
+    ".bas",
+    ".c",
+    ".cs",
+    ".css",
+    ".cmake",
+    ".csv",
+    ".jinja",
+    ".jinja2",
+    ".j2",
+    ".go",
+    ".graphql",
+    ".gql",
+    ".hs",
+    ".lhs",
+    ".java",
+    ".kt",
+    ".tex",
+    ".lisp",
+    ".lsp",
+    ".lua",
+    ".mat",
+    ".mongodb",
+    ".php",
+    ".ps1",
+    ".pl",
+    ".py",
+    ".r",
+    ".rb",
+    ".rs",
+    ".sql",
+    ".swift",
+    ".sql",
+    ".vbproj",
+    ".vbp",
+    ".vb",
+    ".v",
+    ".verilog",
+    ".vlg",
+    ".vh",
+    ".xml",
+    ".yaml",
+]
+OTHER_EXT = [".pdf", ".ipynb"]
+
 
 @cache
 def get_dirs(url_component_path, url_path, path):
@@ -41,14 +95,7 @@ def get_dirs(url_component_path, url_path, path):
         if os.path.isdir(f"../files{path}/{f}"):
             files_paths.append([f, f"/files{path}/{f}", "dir"])
         else:
-            if (
-                f.endswith(".docx")
-                or f.endswith(".xlsx")
-                or f.endswith(".pptx")
-                or f.endswith(".ppt")
-                or f.endswith(".pdf")
-                or f.endswith(".ipynb")
-            ):
+            if any(f.endswith(ext) for ext in OFFICE_EXT + TEXT_EXT + OTHER_EXT):
                 file_path = f"{'/viewer' + url_component_path[6:]}/{f}"
             else:
                 file_path = f"{'/download' + url_component_path[6:]}/{f}"
@@ -66,7 +113,9 @@ def get_dirs(url_component_path, url_path, path):
 @app.exception_handler(CustomException)
 async def custom_exception_handler(request: Request, exc: CustomException):
     return templates.TemplateResponse(
-        "error.html", {"request": request, "exc": exc, "BASE_URL": config('BASE_URL')}, exc.code
+        "error.html",
+        {"request": request, "exc": exc, "BASE_URL": config("BASE_URL")},
+        exc.code,
     )
 
 
@@ -101,7 +150,7 @@ def files(request: Request, path: str):
             "files": files_paths,
             "dir_paths": dir_paths[1:],
             "links": links,
-            "BASE_URL": config('BASE_URL')
+            "BASE_URL": config("BASE_URL"),
         },
     )
 
@@ -119,18 +168,22 @@ def viewer(request: Request, path: str):
     if not os.path.isfile(f"../files{path}"):
         raise CustomException(404, "File Not Found")
 
-    download_url = f"https://{config('BASE_URL')}/download" + request.url.components.path[7:]
+    download_url = (
+        f"https://{config('BASE_URL')}/download" + request.url.components.path[7:]
+    )
     if path.endswith(".pdf"):
         embed_url = download_url
     elif path.endswith(".ipynb"):
         embed_url = f"https://nbviewer.org/urls{download_url[7:]}"
-    else:
+    elif any(path.endswith(ext) for ext in OFFICE_EXT):
         embed_url = f"https://view.officeapps.live.com/op/embed.aspx?src={parse.quote(download_url, safe='')}&amp;wdEmbedCode=0"
+    elif any(path.endswith(ext) for ext in TEXT_EXT):
+        embed_url = f"https://{config('BASE_URL')}/code{path}"
 
     file_name = request.url.components.path.split("/")[-1]
-    prev_dir = (f"https://{config('BASE_URL')}/files" + request.url.components.path[7:]).replace(
-        file_name, ""
-    )
+    prev_dir = (
+        f"https://{config('BASE_URL')}/files" + request.url.components.path[7:]
+    ).replace(file_name, "")
 
     return templates.TemplateResponse(
         "viewer.html",
@@ -140,8 +193,25 @@ def viewer(request: Request, path: str):
             "file_name": file_name,
             "download_url": download_url,
             "prev_dir": prev_dir[:-1],
-            "BASE_URL": config('BASE_URL')
+            "BASE_URL": config("BASE_URL"),
         },
+    )
+
+
+@app.get("/code{path:path}")
+def code(request: Request, path: str):
+    if not os.path.isfile(f"../files{path}"):
+        raise CustomException(404, "File Not Found")
+
+    with open(f"../files{path}", "r") as f:
+        content = f.read()
+
+    extension = path.split(".")[-1]
+    if extension == "m":
+        extension = "matlab"
+
+    return templates.TemplateResponse(
+        "code.html", {"request": request, "content": content, "extension": extension}
     )
 
 
