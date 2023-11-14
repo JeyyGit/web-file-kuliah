@@ -47,6 +47,7 @@ def get_dirs(url_component_path, url_path, path):
                 or f.endswith(".pptx")
                 or f.endswith(".ppt")
                 or f.endswith(".pdf")
+                or f.endswith(".ipynb")
             ):
                 file_path = f"{'/viewer' + url_component_path[6:]}/{f}"
             else:
@@ -121,6 +122,8 @@ def viewer(request: Request, path: str):
     download_url = f"https://{config('BASE_URL')}/download" + request.url.components.path[7:]
     if path.endswith(".pdf"):
         embed_url = download_url
+    elif path.endswith(".ipynb"):
+        embed_url = f"https://nbviewer.org/urls{download_url[7:]}"
     else:
         embed_url = f"https://view.officeapps.live.com/op/embed.aspx?src={parse.quote(download_url, safe='')}&amp;wdEmbedCode=0"
 
