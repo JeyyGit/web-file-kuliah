@@ -21,7 +21,7 @@ app.mount("/public", StaticFiles(directory="../public"), "public")
 templates = Jinja2Templates("../public")
 links = [config("LINK1"), config("LINK2"), config("LINK3"), config("LINK4")]
 
-OFFICE_EXT = [".doc", ".docx", ".ppt", ".pptx"]
+OFFICE_EXT = [".doc", ".docx", ".ppt", ".pptx", ".xlsx", ".xls"]
 TEXT_EXT = [
     ".txt",
     ".text",
