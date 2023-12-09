@@ -52,6 +52,7 @@ TEXT_EXT = [
     ".lsp",
     ".lua",
     ".mat",
+    ".m",
     ".mongodb",
     ".php",
     ".ps1",
